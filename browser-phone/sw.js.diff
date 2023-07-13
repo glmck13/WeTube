@@ -1,0 +1,8 @@
+3c3
+<     "phone.shtml",   // Special page: Loads from network
+---
+>     "index.html",   // Special page: Loads from network
+80c80
+<     if(event.request.url.endsWith("phone.shtml")){
+---
+>     if(event.request.url.endsWith("index.html")){
