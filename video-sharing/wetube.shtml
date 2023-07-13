@@ -1,0 +1,153 @@
+<html>
+
+<head>
+<title>WeTube</title>
+<meta name="viewport" content="width=device-width">
+<link rel="apple-touch-icon" href="/images/wetube.ico">
+<link rel="icon" href="/images/wetube.ico">
+</head>
+
+<body>
+
+<form action="/cgi/upload.cgi" method="post" enctype="multipart/form-data">
+<input type="file" name="file"><input type="submit">
+</form>
+<!--
+<p id="debug"></p>
+-->
+
+<table>
+<tr>
+<td style="text-align: center; vertical-align: bottom;">
+<p><img id="help" src="/images/help.png" width=60 onclick='player.src="/cdn/wetube.mp4";' /></p>
+<p>
+<img id="camera" src="/images/camera.png" width=75 onclick="startVideo();" />
+<img id="exit" src="/images/exit.png" width=75 onclick="stopVideo();" />
+</p>
+</td>
+<td>
+<video id="player" playsInline autoplay controls height=300 poster="/images/tv3.png" style="border-radius: 20px;"></video>
+</td>
+</tr>
+</table>
+
+<script>
+var wwwRoot = window.location.href.split('/')[0];
+var blank="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+camera.src = "/images/camera.png"; camera.width = 75;
+exit.src = blank; exit.width = 0;
+var raw;
+var stream;
+var mediaRecorder;
+var blob;
+var init = false;
+var timer = 0;
+
+async function startVideo()
+{
+    raw = [];
+    if (!init) {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: { facingMode: "user" } });
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = (event) => {
+       if (event.data)
+            raw.push(event.data);
+    }
+    mediaRecorder.onstop = procVideo;
+    }
+    mediaRecorder.start(100);
+    camera.src = blank; camera.width = 0;
+    exit.src = "/images/exit.png"; exit.width = 75;
+}
+
+function stopVideo()
+{
+    mediaRecorder.stop();
+    stream.getTracks().forEach(track => track.stop());
+}
+
+function procVideo()
+{
+    if (!raw.length)
+        return;
+
+    blob = new Blob(raw, { type: mediaRecorder.mimeType });
+    player.src = URL.createObjectURL(blob);
+
+    var formData = new FormData();
+    formData.append("file", blob);
+    fetch(wwwRoot+"/cgi/upload.cgi", { method: "POST", body: formData, cache: "no-store" })
+    .then((response) => response.text())
+    .then((responseText) => {
+       console.log(responseText);
+    });
+    camera.src = "/images/camera.png"; camera.width = 75;
+    exit.src = blank; exit.width = 0;
+
+    timer = 15;
+}
+
+function pollGallery()
+{
+    if (--timer <= 0) {
+        fetch(wwwRoot+"/cgi/poll.cgi", { method: "POST", cache: "no-store" })
+           .then((response) => response.text())
+           .then((responseText) => {
+            gallery.innerHTML = responseText;
+        });
+
+        timer = 3*60;
+    }
+}
+
+function delVideo(file)
+{
+    fetch(wwwRoot+"/cgi/delete.cgi?video="+file, { method: "POST", cache: "no-store" })
+    .then((response) => response.text())
+    .then((responseText) => {
+       console.log(responseText);
+    });
+
+    timer = 0;
+}
+
+setInterval(() => this.pollGallery(), 1000);
+
+</script>
+
+<hr>
+
+<style>
+.scroll-container {
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.scroll-container img {
+  padding: 15px;
+  vertical-align: top;
+}
+
+.card {
+  position: relative;
+  margin: 0 auto;
+}
+
+.card .content {
+  vertical-align: top;
+  color: white;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  /* opacity: 0.5; */
+}
+</style>
+
+<div id="gallery" class="scroll-container">
+</div>
+
+</body>
+
+</html>

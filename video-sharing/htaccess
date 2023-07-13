@@ -1,0 +1,11 @@
+AuthType Basic
+AuthName "WeTube"
+AuthUserFile /var/www/html/.htpasswd
+Require valid-user
+#SetEnvIf Request_URI "(/apple-touch-icon\.png)$" allow
+#SetEnvIf Request_URI "(/images/wetube\.ico)$" allow
+#SetEnvIf Request_URI "(/cdn/wetube\.mp4)$" allow
+Order allow,deny
+Allow from env=allow
+#Allow from 192.168.1.0/24
+Satisfy any
