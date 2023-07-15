@@ -1,7 +1,7 @@
 # WeTube
 Browser-based video sharing service with integrated WebRTC phone  
 
-<img width=600 src=https://github.com/glmck13/WeTube/blob/main/wetube.png>  
+<img width=800 src=https://github.com/glmck13/WeTube/blob/main/wetube.png>  
 
 ## Background
 I wanted to create a simple web-based tool that would allow us to communicate with our granddaughter: something that would allow us to share videos and even talk in real time.  The result was a very simple browser-based app that makes good use of the MediaRecorder capability built into today’s browsers.
