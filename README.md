@@ -16,7 +16,7 @@ Once I recorded the video, I had to upload it to my server.  For help with that 
 On the server side I use ffmpeg to convert the uploaded videos to MP4 format, since this plays natively using HTML5 <video> tags.
 
 ## Using the browser as a WebRTC client
-There’s an excellent [WebRTC SIP client for the browser written by Conrad de Wit posted on GitHub](https://github.com/InnovateAsterisk/Browser-Phone).  That turned out to be the easy part to get a phone integrated into my page.  The more difficult task was trying to figure out how to configure my Asterisk/FreePBX to process WebRTC calls.   The Asterisk help documentation got m moest of the way there, but unfortunately omitted some key settings.  After combining tidbits from the following sites, I managed to get things working:
+There’s an excellent [WebRTC SIP client for the browser written by Conrad de Wit posted on GitHub](https://github.com/InnovateAsterisk/Browser-Phone).  That turned out to be the easy part to get a phone integrated into my page.  The more difficult task was trying to figure out how to configure my Asterisk/FreePBX to process WebRTC calls.   The Asterisk help documentation got me most of the way there, but unfortunately omitted some key settings.  After combining tidbits from the following sites, I managed to get things working:
 + [WebRTC tutorial using SIPML5, Rusty Newton, Jul 3, 2018](https://wiki.asterisk.org/wiki/pages/viewpage.action?pageId=40818097)
 + [Freepbx Failed to create fingerprint from the digest, Aug 2022](https://community.freepbx.org/t/freepbx-failed-to-create-fingerprint-from-the-digest/85205)
 + [WebRTC configuration by VoIPmonitor, Aug 7, 2020](https://www.voipmonitor.org/doc/WebRTC)
