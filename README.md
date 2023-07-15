@@ -24,5 +24,5 @@ There’s an excellent [WebRTC SIP client for the browser written by Conrad de W
 
 The two shell scripts in the freepbx directory generate the necessary PJSIP endpoints and extensions for the WebRTC clients.  These settings can simply be populated in the respective “custom.conf” files in the /etc/asterisk directory.
 
-Along the way I also had to recompile Asterisk to add the OPUS codec.  And since my PBX is sitting in my basement behind a broadband connection, I also needed the services of a STUN/TURN host.  I decided to just turn up one of my own, following these instructions:
+Along the way I also had to recompile Asterisk to add the OPUS codec.  And since the PBX is sitting in my basement behind a broadband connection, I also needed the services of a STUN/TURN host.  I decided to just turn up one of my own, following these instructions:
 + [WebRTC TURN server: Everything you need to know, Oct 17, 2022, S. Karthikeyan](https://www.100ms.live/blog/webrtc-turn-server)
