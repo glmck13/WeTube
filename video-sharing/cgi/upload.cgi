@@ -28,26 +28,39 @@ do
 	fi
 done <$infile
 outfile="${infile%.*}-$prefix.$suffix"
+tmpfile=tmp$$.mp4
 
 dd ibs=1 skip=$skip if=$infile of=$outfile
 truncate -s -$boundary $outfile
 
-if [ "$prefix" = "video" ]; then
-	ffmpeg -ss 00:00:01 -i $outfile -frames:v 1 -vf scale=200:-1 ${outfile%-*}-frame.jpg 2>/dev/null
-	if [ "$suffix" != "mp4" ]; then
-		ffmpeg -i $outfile ${outfile%.*}.mp4 2>/dev/null
-		rm -f $outfile
-		outfile=${outfile%.*}.mp4
-	fi
-fi
+frame=${outfile%-*}-frame.jpg
 
-while read line
+valid=""
+while true
 do
-	[[ "$line" == \#* ]] && continue
-	addr=${line#*:}
-	sendaway.sh "$addr" "WeTube post from ${REMOTE_USER}!" "https://mckspot.net:8888/cdn/$outfile"
-done <${HTML_ROOT}/etc/wetube.conf
+	[ "$prefix" != "video" ] && break
+
+	ffmpeg -i $outfile -vf scale=-2:300 -crf 20 $tmpfile 2>/dev/null || break
+	rm -f $outfile; outfile=${outfile%.*}.mp4
+	mv $tmpfile $outfile
+
+	ffmpeg -ss 00:00:02 -i $outfile -frames:v 1 -vf scale=200:-1 ${frame} 2>/dev/null || break
+	[ -s ${frame} ] || break
+
+	valid="y"; break
+done
 
 rm -f $infile
+if [ "$valid" ]; then
+	while read line
+	do
+		[[ "$line" == \#* ]] && continue
+		addr=${line#*:}
+		sendaway.sh "$addr" "WeTube post from ${REMOTE_USER}!" "https://mckspot.net:8888/wetube.shtml"
+	done <${HTML_ROOT}/etc/wetube.conf
 
-ls -l $id-*
+	ls -l $id-*
+else
+	rm -f $id-*
+	echo "Not valid"
+fi
