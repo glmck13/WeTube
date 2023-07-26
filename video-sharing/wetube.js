@@ -1,13 +1,11 @@
 var wwwRoot = window.location.href.split("/")[0];
 
 var weTubeYellowPages = {
-    "Frannie" :		["",            "7160", "7160"],
-    "Dad" :		["95184613259", "7150", "7150"],
-    "Mom" :		["94109495047", "7140", "7140"],
-    "UncleDaniel" :	["98605978618", "7130", "7130"],
-    "KK" :		["94438388483", "7120", "7120"],
-    "DiDi" :		["94432554925", "7110", "7110"],
-    "G" :		["94437569795", "7100", "7100"]
+    "Name-1" :		["9XXXXXXXXXX", "webRTC-ext", "webRTC-ext"],
+    "Name-2" :		["9XXXXXXXXXX", "webRTC-ext", "webRTC-ext"],
+    "Name-3" :		["9XXXXXXXXXX", "webRTC-ext", "webRTC-ext"],
+    "Name-3" :		["9XXXXXXXXXX", "webRTC-ext", "webRTC-ext"],
+    "..." :		["9XXXXXXXXXX", "webRTC-ext", "webRTC-ext"]
 }
 var weTubeServer = "mckspot.net";
 
