@@ -44,7 +44,7 @@ do
 	rm -f $outfile; outfile=${outfile%.*}.mp4
 	mv $tmpfile $outfile
 
-	ffmpeg -ss 00:00:02 -i $outfile -frames:v 1 -vf scale=200:-1 ${frame} 2>/dev/null || break
+	ffmpeg -ss 00:00:02 -i $outfile -frames:v 1 -vf scale=200:-2 ${frame} 2>/dev/null || break
 	[ -s ${frame} ] || break
 
 	valid="y"; break
