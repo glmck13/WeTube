@@ -1,0 +1,68 @@
+--- phone.js	2023-01-18 06:26:05.000000000 -0500
++++ ../../html/phone.js	2023-07-28 08:29:50.220559061 -0400
+@@ -106,7 +106,7 @@
+ let WssInTransport = (getDbItem("WssInTransport", "1") == "1");                        // Set the transport parameter to wss when used in SIP URIs. (Required for Asterisk as it doesn't support Path)
+ let IpInContact = (getDbItem("IpInContact", "1") == "1");                              // Set a random IP address as the host value in the Contact header field and Via sent-by parameter. (Suggested for Asterisk)
+ let BundlePolicy = getDbItem("BundlePolicy", "balanced");                              // SDP Media Bundle: max-bundle | max-compat | balanced https://webrtcstandards.info/sdp-bundle/
+-let IceStunServerJson = getDbItem("IceStunServerJson", "");                            // Sets the JSON string for ice Server. Default: [{ "urls": "stun:stun.l.google.com:19302" }] Must be https://developer.mozilla.org/en-US/docs/Web/API/RTCConfiguration/iceServers
++let IceStunServerJson = getDbItem("IceStunServerJson", '[{ "urls": "stun:3.140.225.26:3478" }]');                            // Sets the JSON string for ice Server. Default: [{ "urls": "stun:stun.l.google.com:19302" }] Must be https://developer.mozilla.org/en-US/docs/Web/API/RTCConfiguration/iceServers
+ let IceStunCheckTimeout = parseInt(getDbItem("IceStunCheckTimeout", 500));             // Set amount of time in milliseconds to wait for the ICE/STUN server
+ let SubscribeBuddyAccept = getDbItem("SubscribeBuddyAccept", "application/pidf+xml");  // Normally only application/dialog-info+xml and application/pidf+xml
+ let SubscribeBuddyEvent = getDbItem("SubscribeBuddyEvent", "presence");                // For application/pidf+xml use presence. For application/dialog-info+xml use dialog 
+@@ -9538,12 +9538,12 @@
+                                     item.uID, 
+                                     item.DisplayName, 
+                                     item.ExtensionNumber, 
+-                                    "", 
+-                                    "", 
+-                                    "", 
++                                    item.MobileNumber, 
++                                    item.ContactNumber1, 
++                                    item.ContactNumber2, 
+                                     item.LastActivity, 
+-                                    "", 
+-                                    "", 
++                                    item.Description, 
++                                    item.Email, 
+                                     item.jid, 
+                                     item.EnableDuringDnd, 
+                                     item.Subscribe,
+@@ -11885,7 +11885,11 @@
+             }
+ 
+             // The profileUserID identifies users
+-            if(localDB.getItem("profileUserID") == null) localDB.setItem("profileUserID", uID()); // For first time only
++            if(localDB.getItem("profileUserID") == null) {
++                localDB.setItem("profileUserID", uID()); // For first time only
++                profileUserID = getDbItem("profileUserID", null);
++                InitGlobalBuddies();
++            }
+     
+             // 1 Account
+             if(EnableAccountSettings){
+@@ -14527,7 +14531,8 @@
+         });
+ 
+         // Update your own status, and get the status of others
+-        XmppSetMyPresence(getDbItem("XmppLastPresence", "chat"), getDbItem("XmppLastStatus", ""), true);
++        // XmppSetMyPresence(getDbItem("XmppLastPresence", "chat"), getDbItem("XmppLastStatus", ""), true);
++        XmppSetMyPresence(getDbItem("XmppLastPresence", "chat"), getDbItem("XmppLastStatus", "Available"), true);
+ 
+         // Populate the buddy list
+         UpdateBuddyList();
+@@ -14690,7 +14695,7 @@
+                     });
+                     Strophe.forEachChild(element, "CELL", function(cell) {
+                         // Mobile
+-                        buddyObj.MobileNumber = cell.textContent;
++                        // buddyObj.MobileNumber = cell.textContent;
+                     });
+                     Strophe.forEachChild(element, "VOICE", function(Alt1) {
+                         // Alt1
+@@ -15176,4 +15181,4 @@
+     console.log("XMPP connect...");
+ 
+     XMPP.connect(xmpp_username, xmpp_password, onStatusChange);
+-}
+\ No newline at end of file
++}

@@ -1,0 +1,20 @@
+--- index.html	2023-01-18 06:26:05.000000000 -0500
++++ ../../html/phone.shtml	2023-07-28 08:29:50.972557914 -0400
+@@ -45,6 +45,10 @@
+         <link rel="stylesheet" type="text/css" href="phone.css"/>
+ 
+         <!-- Provisioning -->
++        <script>
++        var weTubeUser = "<!--#echo var="REMOTE_USER" -->";
++        </script>
++        <script type="text/javascript" src="wetube.js"></script>
+         <script type="text/javascript">
+             // Provision runtime options can go here.
+             var phoneOptions = {
+@@ -165,4 +169,4 @@
+     <script type="text/javascript" src="https://dtd6jl0d42sve.cloudfront.net/lib/Croppie/Croppie-2.6.4/croppie.min.js" defer="true"></script>
+     <script type="text/javascript" src="https://dtd6jl0d42sve.cloudfront.net/lib/XMPP/strophe-1.4.1.umd.min.js" defer="true"></script>
+ 
+-</html>
+\ No newline at end of file
++</html>
