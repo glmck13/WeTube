@@ -10,6 +10,7 @@ cd ${HTML_ROOT}/cdn
 infile=$id.bin
 cat - >$infile
 
+format=webm
 prefix="none"
 suffix="raw"
 boundary=0
@@ -21,6 +22,7 @@ do
 	let skip+=${#line}+2
 	if [[ $line == Content-Type:* ]]; then
 		prefix=${line} prefix=${prefix#* } prefix=${prefix%/*}
+		[ "$prefix" = "application" ] && prefix="video"
 		suffix=${line} suffix=${suffix#*/} suffix=${suffix%;*}
 		[ "$suffix" = "x-matroska" -o "$suffix" = "octet-stream" ] && suffix="webm"
 	elif [ ! "$line" ]; then
@@ -28,7 +30,7 @@ do
 	fi
 done <$infile
 outfile="${infile%.*}-$prefix.$suffix"
-tmpfile=tmp$$.mp4
+tmpfile=tmp$$.$format
 
 dd ibs=1 skip=$skip if=$infile of=$outfile
 truncate -s -$boundary $outfile
@@ -41,7 +43,7 @@ do
 	[ "$prefix" != "video" ] && break
 
 	ffmpeg -i $outfile -vf scale=-2:300 -crf 20 $tmpfile 2>/dev/null || break
-	rm -f $outfile; outfile=${outfile%.*}.mp4
+	rm -f $outfile; outfile=${outfile%.*}.$format
 	mv $tmpfile $outfile
 
 	ffmpeg -ss 00:00:02 -i $outfile -frames:v 1 -vf scale=200:-2 ${frame} 2>/dev/null || break
