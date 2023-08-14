@@ -52,7 +52,7 @@ do
 	valid="y"; break
 done
 
-rm -f $infile
+rm -f $infile $tmpfile
 if [ "$valid" ]; then
 	while read line
 	do
