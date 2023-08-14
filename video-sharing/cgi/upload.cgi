@@ -10,7 +10,7 @@ cd ${HTML_ROOT}/cdn
 infile=$id.bin
 cat - >$infile
 
-format=webm
+format=mp4
 prefix="none"
 suffix="raw"
 boundary=0
