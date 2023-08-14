@@ -42,7 +42,7 @@ while true
 do
 	[ "$prefix" != "video" ] && break
 
-	ffmpeg -i $outfile -vf scale=-2:300 -crf 20 $tmpfile 2>/dev/null || break
+	ffmpeg -i $outfile -vf scale=-2:300 -crf 20 -r 30 $tmpfile 2>/dev/null || break
 	rm -f $outfile; outfile=${outfile%.*}.$format
 	mv $tmpfile $outfile
 
