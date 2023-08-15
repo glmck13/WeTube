@@ -20,7 +20,7 @@ do
 		style="style='border-radius: 10px;'"
 	fi
 	print "<span class=\"card\">"
-	print "<span class=\"content\">$who</span>"
+	print "<span class=\"content\">$who: $(date --date=@$when +%a)</span>"
 	print "<img src=\"/cdn/$frame\" $style onclick='player.src = \"/cdn/$video\";' ondblclick='if (confirm(\"Delete video?\")) { delVideo(\"${video%-*}\"); };' />"
 	print "</span>"
 done
