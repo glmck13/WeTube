@@ -66,7 +66,8 @@ exten => 111,1,Answer()
 ;exten => 111,n,AGI(ttsagi.py,"Now tell me your message. Start speaking after the beep. Press any key when you're finished.",/var/lib/asterisk/sounds/myapp/what.mp3)
 ;exten => 111,n,AGI(ttsagi.py,"You said:",/var/lib/asterisk/sounds/myapp/replay.mp3)
 ;exten => 111,n,AGI(ttsagi.py,"If that's correct, press 1 to continue, or 2 to try again.",/var/lib/asterisk/sounds/myapp/chkwho.mp3)
-;exten => 111,n,AGI(ttsagi.py,"If your message sounds good, press 1 to send it, or 2 to record it again.",/var/lib/asterisk/sounds/myapp/chkwhat.mp3)
+;exten => 111,n,AGI(ttsagi.py,"If your message sounds OK, press 1 to send it. Otherwise, press 2 to record it again, or 3 to cancel.",/var/lib/asterisk/sounds/myapp/chkwhat.mp3)
+;exten => 111,n,AGI(ttsagi.py,"Message canceled!",/var/lib/asterisk/sounds/myapp/canceled.mp3)
 ;exten => 111,n,AGI(ttsagi.py,"Message sent!",/var/lib/asterisk/sounds/myapp/sent.mp3)
 ;exten => 111,n,AGI(ttsagi.py,"Goodbye!",/var/lib/asterisk/sounds/myapp/bye.mp3)
 ;
@@ -98,12 +99,18 @@ exten => 111,n,Playback(myapp/chkwhat)
 exten => 111,n,Read(MYCHOICE,beep,1)
 exten => 111,n,GotoIf($["${MYCHOICE}" = "1"]?msgsend)
 exten => 111,n,GotoIf($["${MYCHOICE}" = "2"]?msgwhat)
+exten => 111,n,GotoIf($["${MYCHOICE}" = "3"]?msgcancel)
 exten => 111,n,Goto(msgloop2)
+;
+exten => 111,n(msgcancel),Playback(myapp/canceled)
+exten => 111,n,Goto(msgbye)
 ;
 exten => 111,n(msgsend),System(ffmpeg -i ${RECORDED_FILE}.wav ${RECORDED_FILE}.mp3)
 exten => 111,n,Set(id=${CALLERID(all)})
 exten => 111,n,AGI(smsagi.py,${RECORDED_FILE},${id},${CONTACTS_LIST})
 exten => 111,n,Playback(myapp/sent)
-exten => 111,n,Playback(myapp/bye)
+exten => 111,n,Goto(msgbye)
+;
+exten => 111,n(msgbye),Playback(myapp/bye)
 exten => 111,n,hangup
 EOF
