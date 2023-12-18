@@ -8,9 +8,9 @@ INFILE = sys.argv[1]
 CALLERID = sys.argv[2]
 CONTACTS = sys.argv[3]
 
-SMTP_FROM = ""
-SMTP_KEY = ""
-SMTP_SERVER = ""
+SMTP_FROM = "glmck13@verizon.net"
+SMTP_KEY = "aofzqorpphnxfhzc"
+SMTP_SERVER = "smtp.verizon.net"
 SMTP_PORT = 465
 
 eml = EmailMessage()
