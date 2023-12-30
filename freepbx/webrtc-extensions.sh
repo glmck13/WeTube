@@ -8,6 +8,7 @@ cat - <<-"EOF"
 [from-internal-custom]
 
 exten => _88X,1,Goto(from-pstn-custom,${EXTEN},1)
+exten => _77X,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 444,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 411,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 555,1,Goto(from-pstn-custom,${EXTEN},1)
@@ -19,7 +20,7 @@ exten => 7000,1,Noop(Call to ${EXTEN})
 same => n,AGI(agi://pimate.local/polly.sh)
 same => n,GotoIf($["${CALLERID(num)}" = "5551212"]?ivr)
 same => n,Dial(PJSIP/6100&PJSIP/6200)
-same => n,Hangup
+same => n,Hangup()
 ;same => n,AGI(ttsagi.py,"Enter extension followed by the pound key.",/var/lib/asterisk/sounds/common/extension.mp3)
 same => n(ivr),Set(VOLUME(TX)=2)
 same => n,Read(MYCHOICE,common/extension,,t(*#))
@@ -32,7 +33,7 @@ do
 cat - <<EOF
 exten => ${ext},1,Noop(Call to \${EXTEN})
 same => n,Dial(PJSIP/\${EXTEN})
-same => n,Hangup
+same => n,Hangup()
 
 EOF
 
@@ -50,15 +51,15 @@ same => n,Hangup()
 
 exten => 555,1,Noop(Call to ${EXTEN})
 same => n,Dial(PJSIP/OBIBOSTON)
-same => n,Hangup
+same => n,Hangup()
 
 exten => 333,1,Noop(Call to ${EXTEN})
 same => n,Dial(PJSIP/6100&PJSIP/6200)
-same => n,Hangup
+same => n,Hangup()
 
 exten => 111,1,Noop(Call to ${EXTEN})
 same => n,Dial(PJSIP/OBIMDOC)
-same => n,Hangup
+same => n,Hangup()
 
 exten => 222,1,Answer()
 same => n,Set(VOLUME(TX)=2)
@@ -116,12 +117,23 @@ same => n,Playback(sms/sent)
 same => n,Goto(msgbye)
 ;
 same => n(msgbye),Playback(sms/bye)
-same => n,hangup
+same => n,Hangup()
 
 exten => _88X,1,Answer()
-same => n,AGI(songagi.sh,${EXTEN:-1})
-same => n,Playback(songs/${SONG_FILE})
-same => n,hangup
+same => n,AGI(songagi.sh,${EXTEN:-1},Raffi)
+same => n,Playback(${SONG_FILE})
+same => n,Hangup()
+
+exten => _77X,1,Answer()
+same => n,Set(VOLUME(TX)=2)
+same => n,AGI(songagi.sh,${EXTEN:-1},DanielTiger)
+same => n,If($[${LEN(${SONG_FILE})} = 0}])
+same => n,MP3Player(http://piville.home/local/danieltiger.cgi)
+same => n,ExitIf()
+same => n,Else()
+same => n,Playback(${SONG_FILE})
+same => n,EndIf()
+same => n,Hangup()
 
 exten => 444,1,Answer()
 same => n,Set(VOLUME(TX)=2)
@@ -144,5 +156,5 @@ same => n,AGI(xlateagi.py,${RECORDED_FILE}.wav,${lang}.mp3,${lang})
 same => n,Playback(${RECORDED_FILE}-${lang})
 same => n,Goto(xlateloop)
 same => n(xlatebye),Playback(xlate/bye)
-same => n,hangup
+same => n,Hangup()
 EOF
