@@ -7,8 +7,7 @@ offset=${3:?Enter offset}
 cat - <<-"EOF"
 [from-internal-custom]
 
-exten => _88X,1,Goto(from-pstn-custom,${EXTEN},1)
-exten => _77X,1,Goto(from-pstn-custom,${EXTEN},1)
+exten => _[78]XX,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 444,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 411,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 555,1,Goto(from-pstn-custom,${EXTEN},1)
@@ -119,20 +118,9 @@ same => n,Goto(msgbye)
 same => n(msgbye),Playback(sms/bye)
 same => n,Hangup()
 
-exten => _88X,1,Answer()
-same => n,AGI(songagi.sh,${EXTEN:-1},Raffi)
-same => n,Playback(${SONG_FILE})
-same => n,Hangup()
-
-exten => _77X,1,Answer()
-same => n,Set(VOLUME(TX)=2)
-same => n,AGI(songagi.sh,${EXTEN:-1},DanielTiger)
-same => n,If($[${LEN(${SONG_FILE})} = 0}])
-same => n,MP3Player(http://piville.home/local/danieltiger.cgi)
-same => n,ExitIf()
-same => n,Else()
-same => n,Playback(${SONG_FILE})
-same => n,EndIf()
+exten => _[78]XX,1,Answer()
+same => n,Set(VOLUME(TX)=3)
+same => n,MP3Player(http://piville.home/local/pbx.cgi?exten=${EXTEN})
 same => n,Hangup()
 
 exten => 444,1,Answer()
