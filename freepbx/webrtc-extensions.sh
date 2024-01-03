@@ -7,7 +7,7 @@ offset=${3:?Enter offset}
 cat - <<-"EOF"
 [from-internal-custom]
 
-exten => _[78]XX,1,Goto(from-pstn-custom,${EXTEN},1)
+exten => _[78]X.,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 444,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 411,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 555,1,Goto(from-pstn-custom,${EXTEN},1)
@@ -118,7 +118,7 @@ same => n,Goto(msgbye)
 same => n(msgbye),Playback(sms/bye)
 same => n,Hangup()
 
-exten => _[78]XX,1,Answer()
+exten => _[78]X.,1,Answer()
 same => n,Set(VOLUME(TX)=3)
 same => n,MP3Player(http://piville.home/local/pbx.cgi?exten=${EXTEN})
 same => n,Hangup()
