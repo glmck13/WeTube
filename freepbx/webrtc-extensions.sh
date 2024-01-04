@@ -21,7 +21,6 @@ same => n,GotoIf($["${CALLERID(num)}" = "5551212"]?ivr)
 same => n,Dial(PJSIP/6100&PJSIP/6200)
 same => n,Hangup()
 ;same => n,AGI(ttsagi.py,"Enter extension followed by the pound key.",/var/lib/asterisk/sounds/common/extension.mp3)
-same => n(ivr),Set(VOLUME(TX)=2)
 same => n,Read(MYCHOICE,common/extension,,t(*#))
 same => n,Goto(from-pstn-custom,${MYCHOICE},1)
 
