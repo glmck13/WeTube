@@ -24,7 +24,8 @@ let end=$start+3600
 secs=$(date "+%s")
 trap 'let start=${start}+$(date +"%s")-${secs}; echo ${start} >$POSITION' HUP INT TERM EXIT
 
-grep "^$exten|" pbx.conf | IFS='|' read x media addr
+grep "^$exten|" pbx.conf | IFS='|' read x media addr desc
+[ ! "$media" ] && media="file" addr="misc/nothing-en.mp3"
 
 print "Content-Type: audio/mpeg\n"
 
