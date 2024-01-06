@@ -7,7 +7,7 @@ offset=${3:?Enter offset}
 cat - <<-"EOF"
 [from-internal-custom]
 
-exten => _[78]X.,1,Goto(from-pstn-custom,${EXTEN},1)
+exten => _8X.,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 444,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 411,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 555,1,Goto(from-pstn-custom,${EXTEN},1)
@@ -15,7 +15,7 @@ exten => 333,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 222,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 111,1,Goto(from-pstn-custom,${EXTEN},1)
 
-exten => 7000,1,Noop(Call to ${EXTEN})
+exten => 6000,1,Noop(Call to ${EXTEN})
 same => n,AGI(agi://pimate.local/polly.sh)
 same => n,GotoIf($["${CALLERID(num)}" = "5551212"]?ivr)
 same => n,Dial(PJSIP/6100&PJSIP/6200)
@@ -117,7 +117,7 @@ same => n,Goto(msgbye)
 same => n(msgbye),Playback(sms/bye)
 same => n,Hangup()
 
-exten => _[78]X.,1,Answer()
+exten => _8X.,1,Answer()
 same => n,Set(VOLUME(TX)=3)
 same => n,MP3Player(http://piville.home/local/pbx.cgi?exten=${EXTEN})
 same => n,Hangup()
