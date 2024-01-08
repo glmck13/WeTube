@@ -22,15 +22,17 @@ else
 fi
 let end=$start+3600
 secs=$(date "+%s")
-trap 'let start=${start}+$(date +"%s")-${secs}; [ "$media" != "file" ] && echo ${start} >$POSITION' HUP INT TERM EXIT
+trap 'let start=${start}+$(date +"%s")-${secs}; [ "$media" != "short" ] && echo ${start} >$POSITION' HUP INT TERM EXIT
 
-grep "^$exten|" pbx.conf | IFS='|' read x media addr desc
-[ ! "$media" ] && media="file" addr="misc/nothing-en.mp3"
+grep "^$exten|" pbx.conf | IFS='|' read x media src desc
+[ ! "$media" ] && media="short" src="misc/nothing-en.mp3"
 
 print "Content-Type: audio/mpeg\n"
 
-if [ "$media" = "file" ]; then
-	cat "$addr"
+if [ "$media" = "short" ]; then
+	cat "$src"
+elif [ "$media" = "long" ]; then
+	ffmpeg -i "$src" -f mp3 -ss "${start}" - 2>/dev/null
 elif [ "$media" = "youtube" ]; then
-	yt-dlp -o - -x "$addr" --download-sections "*${start}-${end}" 2>/dev/null | ffmpeg -i - -f mp3 -ar 48000 - 2>/dev/null
+	yt-dlp -o - -x "$src" --download-sections "*${start}-${end}" 2>/dev/null | ffmpeg -i - -f mp3 -ar 48000 - 2>/dev/null
 fi
