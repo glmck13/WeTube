@@ -10,14 +10,15 @@ cat - <<-"EOF"
 exten => _8X.,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 444,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 411,1,Goto(from-pstn-custom,${EXTEN},1)
+exten => 999,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 555,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 333,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 222,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 111,1,Goto(from-pstn-custom,${EXTEN},1)
 
-exten => 6000,1,Noop(Call to ${EXTEN})
+exten => 6000,1,Noop(Call from ${CALLERID(DNID)} to ${EXTEN})
 same => n,AGI(agi://pimate.local/polly.sh)
-same => n,GotoIf($["${CALLERID(num)}" = "5551212"]?ivr)
+same => n,GotoIf($["${CALLERID(DNID)}" = "FLOWROUTE"]?ivr)
 same => n,Dial(PJSIP/6100&PJSIP/6200)
 same => n,Hangup()
 ;same => n,AGI(ttsagi.py,"Enter extension followed by the pound key.",/var/lib/asterisk/sounds/common/extension.mp3)
@@ -45,6 +46,10 @@ cat - <<-"EOF"
 
 exten => 411,1,Answer()
 same => n,MP3Player(http://piville.home/local/dmr.cgi)
+same => n,Hangup()
+
+exten => 999,1,Noop(Call to ${EXTEN})
+same => n,Dial(PJSIP/GSCAROLINA)
 same => n,Hangup()
 
 exten => 555,1,Noop(Call to ${EXTEN})

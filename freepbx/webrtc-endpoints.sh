@@ -1,6 +1,6 @@
 #!/bin/ksh
 
-typeset -a CID=("Name-1" "Name-2" "Name-3" "...")
+typeset -a CID=("G" "DiDi" "KK" "UncleDaniel" "Mom" "Dad" "Frannie")
 
 endpoint=${1:?Enter starting endpoint}
 count=${2:?Enter number of endpoints}
