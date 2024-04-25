@@ -17,6 +17,7 @@ exten => 222,1,Goto(from-pstn-custom,${EXTEN},1)
 exten => 111,1,Goto(from-pstn-custom,${EXTEN},1)
 
 exten => 6000,1,Noop(Call from ${CALLERID(DNID)} to ${EXTEN})
+same => n,Gosub(macro-user-callerid,s,1())
 same => n,AGI(agi://pimate.local/polly.sh)
 same => n,GotoIf($["${CALLERID(DNID)}" = "FLOWROUTE"]?ivr)
 same => n,Dial(PJSIP/6100&PJSIP/6200)
@@ -45,26 +46,32 @@ cat - <<-"EOF"
 [from-pstn-custom]
 
 exten => 411,1,Answer()
+same => n,Gosub(macro-user-callerid,s,1())
 same => n,MP3Player(http://piville.home/local/dmr.cgi)
 same => n,Hangup()
 
 exten => 999,1,Noop(Call to ${EXTEN})
+same => n,Gosub(macro-user-callerid,s,1())
 same => n,Dial(PJSIP/GSCAROLINA)
 same => n,Hangup()
 
 exten => 555,1,Noop(Call to ${EXTEN})
+same => n,Gosub(macro-user-callerid,s,1())
 same => n,Dial(PJSIP/OBIBOSTON)
 same => n,Hangup()
 
 exten => 333,1,Noop(Call to ${EXTEN})
+same => n,Gosub(macro-user-callerid,s,1())
 same => n,Dial(PJSIP/6100&PJSIP/6200)
 same => n,Hangup()
 
 exten => 111,1,Noop(Call to ${EXTEN})
+same => n,Gosub(macro-user-callerid,s,1())
 same => n,Dial(PJSIP/OBIMDOC)
 same => n,Hangup()
 
 exten => 222,1,Answer()
+same => n,Gosub(macro-user-callerid,s,1())
 same => n,Set(VOLUME(TX)=2)
 ;same => n,AGI(ttsagi.py,"Hi, I'm G's voice assistant, and I can help you send a text message.",/var/lib/asterisk/sounds/sms/answer.mp3)
 ;same => n,AGI(ttsagi.py,"After the beep, press numbers for everyone you want to send your message to. Press 1 for Mom<break time=\"500ms\"/>, 2 for Dad<break time=\"500ms\"/>, 3 for Dee Dee<break time=\"500ms\"/>, 4 for G<break time=\"500ms\"/>, 5 for Aunt KK<break time=\"500ms\"/>, and 6 for Uncle Daniel. Press star when you're done.",/var/lib/asterisk/sounds/sms/who.mp3)
@@ -123,11 +130,13 @@ same => n(msgbye),Playback(sms/bye)
 same => n,Hangup()
 
 exten => _8X.,1,Answer()
+same => n,Gosub(macro-user-callerid,s,1())
 same => n,Set(VOLUME(TX)=3)
 same => n,MP3Player(http://piville.home/local/pbx.cgi?exten=${EXTEN})
 same => n,Hangup()
 
 exten => 444,1,Answer()
+same => n,Gosub(macro-user-callerid,s,1())
 same => n,Set(VOLUME(TX)=2)
 same => n,Playback(xlate/hello-en&xlate/hello-es)
 same => n(xlateloop),Read(MYCHOICE,xlate/press1-en&xlate/press2-es,1)
